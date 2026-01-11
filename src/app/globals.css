@@ -1,0 +1,31 @@
+
+
+
+@import "tailwindcss";
+
+@theme {
+  /* 1. Define Brand Colors */
+  --color-background: #0a0a0a;
+  --color-primary: #8b5cf6;    /* Violet-500 */
+  --color-secondary: #0ea5e9;  /* Sky-500 */
+
+  /* 2. Define Custom Animations */
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-delayed: float 6s ease-in-out 3s infinite;
+}
+
+/* 3. Define Keyframes (Standard CSS) */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Base Styles */
+body {
+  background-color: var(--color-background);
+  color: #ffffff;
+}
