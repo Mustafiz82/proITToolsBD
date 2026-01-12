@@ -16,7 +16,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       
       {/* Badge */}
       {product.badge && (
-        <span className="absolute -right-0 -top-0 rounded-bl-xl rounded-tr-xl bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1 text-xs font-bold text-white shadow-lg">
+        <span className="absolute -right-0 -top-0 rounded-bl-xl rounded-tr-xl bg-linear-to-r from-purple-600 to-pink-600 px-3 py-1 text-xs font-bold text-white shadow-lg">
           {product.badge}
         </span>
       )}
@@ -58,7 +58,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="flex flex-col gap-3">
         <button 
           onClick={() => console.log('Added to cart:', product.name)}
-          className="flex cursor-pointer w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 py-3 text-sm font-semibold text-white transition-all hover:brightness-110 active:scale-95"
+          className="flex cursor-pointer w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-purple-600 to-indigo-600 py-3 text-sm font-semibold text-white transition-all hover:brightness-110 active:scale-95"
         >
          {
           product.upcoming ? "Upcoming" : <> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -69,8 +69,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </button>
         
         <Link 
+       
           href={`/products/${product.slug}`} 
-          className="text-center text-xs font-medium text-gray-500 hover:text-white transition-colors hover:underline"
+          className={` ${product.upcoming && "invisible"} text-center text-xs font-medium text-gray-500 hover:text-white transition-colors hover:underline`}
         >
           View Full Details
         </Link>

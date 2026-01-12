@@ -204,6 +204,16 @@ export default function ProductDetailPage() {
                 >
                   {product.upcoming ? 'Join Waitlist' : 'Get Access Now'}
                 </button>
+               <button 
+  className={`w-full py-3 mt-2 font-semibold transition-colors duration-200
+    ${product.upcoming 
+      ? 'text-gray-500 cursor-not-allowed' 
+      : 'bg-transparent text-gray-400 hover:text-white underline-offset-4 hover:underline'}`
+  }
+  disabled={product.upcoming}
+>
+  {product.upcoming ? 'Join Waitlist' : 'Add to Cart'}
+</button>
                 
                 <p className="text-center text-xs text-gray-500 mt-4 flex items-center justify-center gap-1">
                   <Lock className="w-3 h-3" /> Secure SSL Encrypted Payment

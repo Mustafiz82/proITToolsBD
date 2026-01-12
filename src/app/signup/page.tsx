@@ -1,0 +1,89 @@
+"use client";
+
+import Link from "next/link";
+import { Lock, Mail, User, ArrowRight } from "lucide-react";
+import Input from "@/ui/Input";
+import Button from "@/ui/Button";
+import { FcGoogle } from "react-icons/fc";
+
+export default function Signup() {
+  return (
+    <div className="min-h-screen w-full bg-[#050509] text-white flex flex-col relative overflow-hidden font-sans selection:bg-purple-500 selection:text-white">
+      {/* --- Background Ambient Glow Effects --- */}
+      <div className="absolute top-[-20%] left-[-10%] w-125 h-125 bg-purple-600/20 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-125 h-125 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
+
+      {/* --- Main Content Area --- */}
+      <main className="flex-1 flex items-center justify-center px-4 relative z-10 py-10">
+        <div className="w-full max-w-md">
+          {/* Card Container */}
+          <div className="bg-[#121217]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+            {/* Top decorative gradient line inside card */}
+            <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-purple-600 via-blue-500 to-purple-600 opacity-80" />
+
+            <div className="mb-8 text-center">
+              <h1 className="text-3xl font-bold mb-2">Create Account</h1>
+              <p className="text-gray-400 text-sm">
+                Join us today and unlock your premium dashboard.
+              </p>
+            </div>
+
+            <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+              <div className="space-y-5">
+                <Input label="Full Name" type="text" Icon={User} />
+                <Input label="Email Address" type="email" Icon={Mail} />
+                <Input label="Password" type="password" Icon={Lock} />
+              </div>
+
+              {/* Signup Button */}
+
+              <Button
+                label="Create Account"
+                classname="w-full rounded-xl py-2! shadow-none hover:scale-100! font-normal"
+                icon={ArrowRight}
+              />
+
+              {/* Divider */}
+              <div className="divider  text-gray-500 text-xs uppercase">
+                Or register with
+              </div>
+
+              {/* Social Login Button (Google) */}
+              <button className="w-full bg-[#1A1A20] hover:bg-[#25252e] border border-gray-800 text-gray-300 font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-3">
+                <FcGoogle />
+                Google
+              </button>
+            </form>
+
+            <div className="text-center mt-6 text-sm text-gray-400">
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="text-purple-400 hover:text-purple-300 transition-colors font-medium"
+              >
+                Sign In
+              </Link>
+            </div>
+          </div>
+
+          {/* Footer Links */}
+          <div className="mt-8 text-center text-sm text-gray-500">
+            <Link
+              href="/privacy"
+              className="hover:text-gray-300 transition-colors"
+            >
+              Privacy Policy
+            </Link>
+            <span className="mx-2">•</span>
+            <Link
+              href="/terms"
+              className="hover:text-gray-300 transition-colors"
+            >
+              Terms of Service
+            </Link>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}

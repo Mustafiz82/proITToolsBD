@@ -1,5 +1,6 @@
 import React from 'react';
 import { CheckCircle2, Zap } from 'lucide-react';
+import Button from '@/ui/Button';
 
 const Hero = () => {
   return (
@@ -42,7 +43,7 @@ const Hero = () => {
                 <span className="text-gray-200"> 100% Warranty. Secure Dashboard Access.</span>
             </p>
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto mb-10">
-                <button className="cursor-pointer px-12 py-3 bg-linear-to-r from-purple-600 to-indigo-600 rounded-full text-white font-bold text-lg shadow-[0_0_20px_rgba(139,92,246,0.4)] hover:scale-105 duration-500 transition-all  active:scale-95">Browse Shop</button>
+            <Button label='Browse Shop' />
             </div>
             <div className="flex flex-wrap items-center gap-6 text-sm text-gray-400">
                 <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" /> 24/7 Support</span>
