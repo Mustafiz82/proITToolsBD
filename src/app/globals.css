@@ -41,3 +41,15 @@ input:-webkit-autofill:active{
     -webkit-text-fill-color: white !important;
     transition: background-color 5000s ease-in-out 0s;
 }
+
+
+
+/* ... your existing input:-webkit-autofill code ... */
+
+/* FIX: Move the label up when the browser autofills the input */
+input:-webkit-autofill ~ label {
+    top: -0.75rem !important;        /* Moves label up (matches -top-3) */
+    background-color: #0B0C10;       /* Background color to hide the border line */
+    font-size: 0.75rem !important;   /* Smaller text (matches text-xs) */
+    color: rgba(255, 255, 255, 0.7); /* Light gray text */
+}   

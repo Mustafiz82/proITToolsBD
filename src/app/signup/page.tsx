@@ -5,8 +5,48 @@ import { Lock, Mail, User, ArrowRight } from "lucide-react";
 import Input from "@/ui/Input";
 import Button from "@/ui/Button";
 import { FcGoogle } from "react-icons/fc";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useMemo } from "react";
+import { FieldErrors } from "react-hook-form";
+
+export interface SignupProps {
+  fullName: string;
+  email: string;
+  password: string;
+}
 
 export default function Signup() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupProps>();
+
+  console.log(errors);
+
+  const onSubmit: SubmitHandler<SignupProps> = (data) => {
+    console.log(errors);
+    console.log(data);
+  };
+
+  const value = useMemo(() => {
+    const missingFields = [];
+    if (errors.fullName) missingFields.push("Full Name");
+    if (errors.email) missingFields.push("Email");
+    if (errors.password) missingFields.push("Password");
+
+    if (missingFields.length === 0) return null;
+
+    if (missingFields.length === 1) {
+      return `${missingFields[0]} is required.`;
+    }
+
+    const lastField = missingFields.pop();
+    return `${missingFields.join(", ")} and ${lastField} are required.`;
+  }, [errors]);
+
+
+
   return (
     <div className="min-h-screen w-full bg-[#050509] text-white flex flex-col relative overflow-hidden font-sans selection:bg-purple-500 selection:text-white">
       {/* --- Background Ambient Glow Effects --- */}
@@ -28,15 +68,43 @@ export default function Signup() {
               </p>
             </div>
 
-            <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-5">
-                <Input label="Full Name" type="text" Icon={User} />
-                <Input label="Email Address" type="email" Icon={Mail} />
-                <Input label="Password" type="password" Icon={Lock} />
+                <Input
+                  label="Full Name"
+                  type="text"
+                  Icon={User}
+                  {...register("fullName", {
+                    required: "Full Name is requred",
+                  })}
+                />
+
+                <Input
+                  label="Email Address"
+                  type="email"
+                  Icon={Mail}
+                  {...register("email", {
+                    required: "Email is requred",
+                  })}
+                />
+                <Input
+                  label="Password"
+                  type="password"
+                  Icon={Lock}
+                  {...register("password", {
+                    required: "Password is requred",
+                  })}
+                />
               </div>
 
+              <div className="min-h-5 mt-2">
+                {Object.keys(errors).length > 0 && (
+                  <p className="text-red-500 text-sm text-center font-medium ">
+                    {value}
+                  </p>
+                )}
+              </div>
               {/* Signup Button */}
-
               <Button
                 label="Create Account"
                 classname="w-full rounded-xl py-2! shadow-none hover:scale-100! font-normal"
