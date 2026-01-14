@@ -1,12 +1,17 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import Link from "next/link";
 import { Menu, Rocket } from "lucide-react";
 import { useParams, usePathname } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
+import useAuth from "@/hook/useAuth";
 
 const Navbar = () => {
 
   const route = usePathname();
+  const {user} = useAuth()
+
+  console.log(user)
 
   const unShownRoute  = ["signup" , "login"]
   

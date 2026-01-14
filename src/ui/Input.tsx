@@ -8,7 +8,7 @@ interface childProps {
   name : string;
 }
 
-export default function Input({ label, Icon,  name , type , ...props}: childProps) {
+export default function Input({ label, Icon, type , ...props}: childProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (

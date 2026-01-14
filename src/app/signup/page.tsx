@@ -6,8 +6,9 @@ import Input from "@/ui/Input";
 import Button from "@/ui/Button";
 import { FcGoogle } from "react-icons/fc";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useMemo } from "react";
-import { FieldErrors } from "react-hook-form";
+import {  useMemo } from "react";
+
+import useAuth from "@/hook/useAuth";
 
 export interface SignupProps {
   fullName: string;
@@ -22,7 +23,11 @@ export default function Signup() {
     formState: { errors },
   } = useForm<SignupProps>();
 
-  console.log(errors);
+  const {handleGoogleSignIn} = useAuth()
+
+
+
+
 
   const onSubmit: SubmitHandler<SignupProps> = (data) => {
     console.log(errors);
@@ -44,8 +49,6 @@ export default function Signup() {
     const lastField = missingFields.pop();
     return `${missingFields.join(", ")} and ${lastField} are required.`;
   }, [errors]);
-
-
 
   return (
     <div className="min-h-screen w-full bg-[#050509] text-white flex flex-col relative overflow-hidden font-sans selection:bg-purple-500 selection:text-white">
@@ -117,11 +120,14 @@ export default function Signup() {
               </div>
 
               {/* Social Login Button (Google) */}
-              <button className="w-full bg-[#1A1A20] hover:bg-[#25252e] border border-gray-800 text-gray-300 font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-3">
+            </form>
+              <button
+                onClick={handleGoogleSignIn}
+                className="w-full bg-[#1A1A20] hover:bg-[#25252e] border border-gray-800 text-gray-300 font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-3"
+              >
                 <FcGoogle />
                 Google
               </button>
-            </form>
 
             <div className="text-center mt-6 text-sm text-gray-400">
               Already have an account?{" "}
