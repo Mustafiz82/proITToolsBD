@@ -1,5 +1,5 @@
 "use client"
-import { GoogleAuthProvider, signInWithPopup , User, UserCredential} from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup , signInWithRedirect, User, UserCredential} from 'firebase/auth';
 
 import React, { createContext, ReactNode, useState } from 'react';
 import { auth } from '../../firebase.config';   
@@ -11,6 +11,8 @@ interface containerProps {
 interface AuthProps {
     user : User | null ;
     handleGoogleSignIn : () => Promise<UserCredential> ;
+    setUser : React.Dispatch<React.SetStateAction<User | null>>
+    handleSignUp :(email: string, password: string) => Promise<UserCredential>
 }
 
 export const AuthContext = createContext<AuthProps | null>(null)
@@ -18,17 +20,25 @@ export const AuthContext = createContext<AuthProps | null>(null)
  const AuthProvider = ({children}:containerProps) => {
 
 
-    const [user , setUser] = useState(null)
+    const [user , setUser] = useState<User| null>(null)
 
 
     const handleGoogleSignIn = () => {
         const provider = new GoogleAuthProvider();
-        return signInWithPopup(auth, provider)
+        // return signInWithPopup(auth, provider)
+        return signInWithRedirect(auth , provider)
     }
+
+
+    const handleSignUp = (email:string , password:string) => {
+        return createUserWithEmailAndPassword(auth , email , password)
+    }
+
 
 
     const object = {
         handleGoogleSignIn,
+        handleSignUp ,
         setUser , 
         user,
     }

@@ -6,9 +6,12 @@ import Input from "@/ui/Input";
 import Button from "@/ui/Button";
 import { FcGoogle } from "react-icons/fc";
 import { SubmitHandler, useForm } from "react-hook-form";
-import {  useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import useAuth from "@/hook/useAuth";
+import { getCustomErrorMessage } from "@/utils/getErrormessage";
+import { validatePassword } from "firebase/auth";
+import { auth } from "../../../firebase.config";
 
 export interface SignupProps {
   fullName: string;
@@ -23,17 +26,43 @@ export default function Signup() {
     formState: { errors },
   } = useForm<SignupProps>();
 
-  const {handleGoogleSignIn} = useAuth()
+  const { handleGoogleSignIn, setUser, user, handleSignUp } = useAuth();
+  const [error, setError] = useState("");
+  const [loading , setLoading] = useState(false)
 
-
-
-
-
+  // handle form submit signup
   const onSubmit: SubmitHandler<SignupProps> = (data) => {
-    console.log(errors);
-    console.log(data);
+    const { email, password } = data;
+    setLoading(true)
+
+    validatePassword(auth, password).then((res) => {
+      if (!res.isValid) {
+        setLoading(false)
+        return setError(
+          "Use uppercase, lowercase, number, and symbol."
+        );
+      }
+
+      handleSignUp(email, password)
+        .then((res) => {
+          setUser(res.user)
+          setError("")
+        })
+        .catch((err) => setError(getCustomErrorMessage(err)))
+        .finally(() => setLoading(false))
+        
+     
+    });
   };
 
+  // hanldleGoogleSignin
+  const handleGoogleSignup = () => {
+    handleGoogleSignIn()
+      .then((res) => setUser(res.user))
+      .catch((err) => setError(getCustomErrorMessage(err)));
+  };
+
+  // show Error message
   const value = useMemo(() => {
     const missingFields = [];
     if (errors.fullName) missingFields.push("Full Name");
@@ -49,6 +78,12 @@ export default function Signup() {
     const lastField = missingFields.pop();
     return `${missingFields.join(", ")} and ${lastField} are required.`;
   }, [errors]);
+
+  useEffect(() => {
+    if (value) {
+      setError(value);
+    }
+  }, [value]);
 
   return (
     <div className="min-h-screen w-full bg-[#050509] text-white flex flex-col relative overflow-hidden font-sans selection:bg-purple-500 selection:text-white">
@@ -76,6 +111,7 @@ export default function Signup() {
                 <Input
                   label="Full Name"
                   type="text"
+                  id="full_name"
                   Icon={User}
                   {...register("fullName", {
                     required: "Full Name is requred",
@@ -85,6 +121,7 @@ export default function Signup() {
                 <Input
                   label="Email Address"
                   type="email"
+                  id="email"
                   Icon={Mail}
                   {...register("email", {
                     required: "Email is requred",
@@ -93,6 +130,7 @@ export default function Signup() {
                 <Input
                   label="Password"
                   type="password"
+                  id="email"
                   Icon={Lock}
                   {...register("password", {
                     required: "Password is requred",
@@ -101,17 +139,18 @@ export default function Signup() {
               </div>
 
               <div className="min-h-5 mt-2">
-                {Object.keys(errors).length > 0 && (
+                {error && (
                   <p className="text-red-500 text-sm text-center font-medium ">
-                    {value}
+                    {error}
                   </p>
                 )}
               </div>
               {/* Signup Button */}
               <Button
-                label="Create Account"
+                label={loading ? "Creating Account  ..." : "Create Account"}
                 classname="w-full rounded-xl py-2! shadow-none hover:scale-100! font-normal"
-                icon={ArrowRight}
+                icon={!loading && ArrowRight}
+                spinner = {loading &&  true}
               />
 
               {/* Divider */}
@@ -121,13 +160,13 @@ export default function Signup() {
 
               {/* Social Login Button (Google) */}
             </form>
-              <button
-                onClick={handleGoogleSignIn}
-                className="w-full bg-[#1A1A20] hover:bg-[#25252e] border border-gray-800 text-gray-300 font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-3"
-              >
-                <FcGoogle />
-                Google
-              </button>
+            <button
+              onClick={handleGoogleSignup}
+              className="w-full bg-[#1A1A20] hover:bg-[#25252e] border border-gray-800 text-gray-300 font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-3"
+            >
+              <FcGoogle />
+              Google
+            </button>
 
             <div className="text-center mt-6 text-sm text-gray-400">
               Already have an account?{" "}
