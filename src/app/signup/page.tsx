@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import useAuth from "@/hook/useAuth";
 import { getCustomErrorMessage } from "@/utils/getErrormessage";
-import { validatePassword } from "firebase/auth";
+import { updateProfile, validatePassword } from "firebase/auth";
 import { auth } from "../../../firebase.config";
 
 export interface SignupProps {
@@ -26,32 +26,32 @@ export default function Signup() {
     formState: { errors },
   } = useForm<SignupProps>();
 
-  const { handleGoogleSignIn, setUser, user, handleSignUp } = useAuth();
+  const { handleGoogleSignIn, setUser, handleSignUp , handleUpdateProfile } = useAuth();
   const [error, setError] = useState("");
-  const [loading , setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+
 
   // handle form submit signup
   const onSubmit: SubmitHandler<SignupProps> = (data) => {
     const { email, password } = data;
-    setLoading(true)
+    setLoading(true);
 
     validatePassword(auth, password).then((res) => {
       if (!res.isValid) {
-        setLoading(false)
-        return setError(
-          "Use uppercase, lowercase, number, and symbol."
-        );
+        setLoading(false);
+        return setError("Use uppercase, lowercase, number, and symbol.");
       }
 
       handleSignUp(email, password)
         .then((res) => {
-          setUser(res.user)
-          setError("")
+            handleUpdateProfile(data?.fullName)
+            .then(() => {
+              setUser(res.user)
+              setError("")
+            })
         })
         .catch((err) => setError(getCustomErrorMessage(err)))
-        .finally(() => setLoading(false))
-        
-     
+        .finally(() => setLoading(false));
     });
   };
 
@@ -78,6 +78,7 @@ export default function Signup() {
     const lastField = missingFields.pop();
     return `${missingFields.join(", ")} and ${lastField} are required.`;
   }, [errors]);
+
 
   useEffect(() => {
     if (value) {
@@ -150,7 +151,7 @@ export default function Signup() {
                 label={loading ? "Creating Account  ..." : "Create Account"}
                 classname="w-full rounded-xl py-2! shadow-none hover:scale-100! font-normal"
                 icon={!loading && ArrowRight}
-                spinner = {loading &&  true}
+                spinner={loading && true}
               />
 
               {/* Divider */}
