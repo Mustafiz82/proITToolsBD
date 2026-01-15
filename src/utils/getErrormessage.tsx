@@ -17,7 +17,9 @@ const AUTH_ERROR_MESSAGES: Record<string, string> = {
   "auth/popup-closed-by-user": "Sign-in popup was closed before completion.",
   "auth/credential-already-in-use": "This account is already linked to another user.",
   "auth/password-does-not-meet-requirements": "missing password requerments. ",
-  "auth/invalid-credential" : "Incorrect email or password."
+  "auth/invalid-credential" : "Incorrect email or password.",
+  
+
 };
 
 

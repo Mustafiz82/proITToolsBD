@@ -9,6 +9,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { getCustomErrorMessage } from "@/utils/getErrormessage";
 import Button from "@/ui/Button";
 import { FcGoogle } from "react-icons/fc";
+import { useRouter } from "next/navigation";
 
 interface LoginProps {
   email: string;
@@ -19,6 +20,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter()
 
   const { handleSignIn, setUser, handleGoogleSignIn } = useAuth();
   const { handleSubmit, register } = useForm<LoginProps>();
@@ -30,6 +32,7 @@ export default function LoginPage() {
       .then((res) => {
         setUser(res.user);
         setError("");
+        router.push("/")
       })
       .catch((err) => setError(getCustomErrorMessage(err)))
       .finally(() => setLoading(false));
@@ -38,7 +41,9 @@ export default function LoginPage() {
   // hanldleGoogleSignin
   const handleGoogleSignup = () => {
     handleGoogleSignIn()
-      .then((res) => setUser(res.user))
+      .then((res) => {
+        router.push("/")
+      })
       .catch((err) => setError(getCustomErrorMessage(err)));
   };
 
@@ -151,7 +156,7 @@ export default function LoginPage() {
             {/* Social Login Button (Google) */}
             <button
               onClick={handleGoogleSignup}
-              className="w-full bg-[#1A1A20] hover:bg-[#25252e] border border-gray-800 text-gray-300 font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-3"
+              className="w-full bg-[#1A1A20] cursor-pointer hover:bg-[#25252e] border border-gray-800 text-gray-300 font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-3"
             >
               <FcGoogle />
               Google

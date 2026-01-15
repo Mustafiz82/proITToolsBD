@@ -12,6 +12,7 @@ import useAuth from "@/hook/useAuth";
 import { getCustomErrorMessage } from "@/utils/getErrormessage";
 import { updateProfile, validatePassword } from "firebase/auth";
 import { auth } from "../../../firebase.config";
+import { useRouter } from "next/navigation";
 
 export interface SignupProps {
   fullName: string;
@@ -26,10 +27,11 @@ export default function Signup() {
     formState: { errors },
   } = useForm<SignupProps>();
 
-  const { handleGoogleSignIn, setUser, handleSignUp , handleUpdateProfile } = useAuth();
+  const { handleGoogleSignIn, setUser, handleSignUp, handleUpdateProfile } =
+    useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter();
 
   // handle form submit signup
   const onSubmit: SubmitHandler<SignupProps> = (data) => {
@@ -44,11 +46,11 @@ export default function Signup() {
 
       handleSignUp(email, password)
         .then((res) => {
-            handleUpdateProfile(data?.fullName)
-            .then(() => {
-              setUser(res.user)
-              setError("")
-            })
+          handleUpdateProfile(data?.fullName).then(() => {
+            setUser(res.user);
+            setError("");
+            router.push("/")
+          });
         })
         .catch((err) => setError(getCustomErrorMessage(err)))
         .finally(() => setLoading(false));
@@ -58,7 +60,10 @@ export default function Signup() {
   // hanldleGoogleSignin
   const handleGoogleSignup = () => {
     handleGoogleSignIn()
-      .then((res) => setUser(res.user))
+      .then((res) => {
+        router.push("/");
+        setUser(res.user);
+      })
       .catch((err) => setError(getCustomErrorMessage(err)));
   };
 
@@ -78,7 +83,6 @@ export default function Signup() {
     const lastField = missingFields.pop();
     return `${missingFields.join(", ")} and ${lastField} are required.`;
   }, [errors]);
-
 
   useEffect(() => {
     if (value) {
@@ -163,7 +167,7 @@ export default function Signup() {
             </form>
             <button
               onClick={handleGoogleSignup}
-              className="w-full bg-[#1A1A20] hover:bg-[#25252e] border border-gray-800 text-gray-300 font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-3"
+              className="w-full cursor-pointer bg-[#1A1A20] hover:bg-[#25252e] border border-gray-800 text-gray-300 font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-3"
             >
               <FcGoogle />
               Google
