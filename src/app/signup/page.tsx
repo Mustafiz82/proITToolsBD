@@ -10,7 +10,11 @@ import { useEffect, useMemo, useState } from "react";
 
 import useAuth from "@/hook/useAuth";
 import { getCustomErrorMessage } from "@/utils/getErrormessage";
-import { updateProfile, validatePassword } from "firebase/auth";
+import {
+  sendEmailVerification,
+  updateProfile,
+  validatePassword,
+} from "firebase/auth";
 import { auth } from "../../../firebase.config";
 import { useRouter } from "next/navigation";
 
@@ -49,7 +53,18 @@ export default function Signup() {
           handleUpdateProfile(data?.fullName).then(() => {
             setUser(res.user);
             setError("");
-            router.push("/")
+
+            if (auth.currentUser) {
+              sendEmailVerification(auth.currentUser)
+                .then(() => router.push("/verify-email"))
+                .catch((emailError) => {
+                  setError(
+                    "Account created, but could not send email. " +
+                      emailError.message
+                  );
+                  setLoading(false);
+                });
+            }
           });
         })
         .catch((err) => setError(getCustomErrorMessage(err)))

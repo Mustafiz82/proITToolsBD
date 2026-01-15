@@ -43,6 +43,10 @@ const AuthProvider = ({ children }: containerProps) => {
 
   const handleGoogleSignIn = () => {
     const provider = new GoogleAuthProvider();
+
+    provider.addScope("email");
+    provider.addScope("profile"); 
+    
     return signInWithPopup(auth, provider);
   };
 
