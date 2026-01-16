@@ -9,7 +9,7 @@ import { sendEmailVerification } from "firebase/auth";
 export default function page() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [message, setMessage] = useState(""); // For showing success/error messages
-  const [countdown, setCountdown] = useState(0);
+  const [countdown, setCountdown] = useState(60);
   const [isResending, setIsResending] = useState(false);
 
   const { user, handleLogout } = useAuth();
@@ -44,7 +44,7 @@ export default function page() {
       await sendEmailVerification(user);
 
       // Success: Start Timer & Show Message
-      setMessage("✅ Verification link sent! Check your inbox.");
+      setMessage("✅ Verification link sent! Check your inbox and spam");
       setCountdown(60);
     } catch (error: any) {
       console.error(error);
@@ -123,7 +123,7 @@ export default function page() {
               </h1>
 
               <p className="text-gray-400 text-sm leading-relaxed">
-                We've sent a verification link to your inbox.
+                We've sent a verification link to your Email.
                 <br />
                 {/* Email Pill */}
                 <span className="text-white font-medium bg-white/5 px-3 py-1 rounded border border-white/5 mt-3 inline-block">

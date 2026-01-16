@@ -17,7 +17,7 @@ import {
   updateProfile,
   validatePassword,
 } from "firebase/auth";
-import { auth } from "../../../firebase.config";
+import { auth } from "../../../../firebase.config";
 import { useRouter } from "next/navigation";
 
 export interface SignupProps {
@@ -74,9 +74,12 @@ export default function Signup() {
             }
           });
         })
-        .catch((err) => setError(getCustomErrorMessage(err)))
-        .finally(() => setLoading(false));
-    });
+        .catch((err) => {
+          setError(getCustomErrorMessage(err))
+          setLoading(false)
+        })
+        
+    }); 
   };
 
   // hanldleGoogleSignin
