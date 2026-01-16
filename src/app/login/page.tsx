@@ -20,9 +20,9 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
 
-  const { handleSignIn, setUser, handleGoogleSignIn } = useAuth();
+  const { handleSignIn, setUser, handleGoogleSignIn , AuthLoading} = useAuth();
   const { handleSubmit, register } = useForm<LoginProps>();
 
   const handleLogin: SubmitHandler<LoginProps> = (data) => {
@@ -32,7 +32,7 @@ export default function LoginPage() {
       .then((res) => {
         setUser(res.user);
         setError("");
-        router.push("/")
+        router.push("/");
       })
       .catch((err) => setError(getCustomErrorMessage(err)))
       .finally(() => setLoading(false));
@@ -42,7 +42,7 @@ export default function LoginPage() {
   const handleGoogleSignup = () => {
     handleGoogleSignIn()
       .then((res) => {
-        router.push("/")
+        router.push("/");
       })
       .catch((err) => setError(getCustomErrorMessage(err)));
   };
@@ -144,7 +144,7 @@ export default function LoginPage() {
               <Button
                 label={loading ? "Signing In ..." : "Sign In"}
                 classname="w-full rounded-xl py-2! shadow-none hover:scale-100! font-normal"
-                icon={!loading && ArrowRight}
+                icon={loading ? undefined : ArrowRight}
                 spinner={loading && true}
               />
 
@@ -155,11 +155,22 @@ export default function LoginPage() {
             </form>
             {/* Social Login Button (Google) */}
             <button
+              disabled={AuthLoading}
               onClick={handleGoogleSignup}
-              className="w-full bg-[#1A1A20] cursor-pointer hover:bg-[#25252e] border border-gray-800 text-gray-300 font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-3"
+              className="w-full py-3 rounded-xl border border-gray-800 font-medium transition-all flex items-center justify-center gap-3 bg-[#1A1A20] text-gray-300 hover:bg-[#25252e] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#1A1A20]"
             >
-              <FcGoogle />
-              Google
+              {AuthLoading ? (
+                <>
+                  <span className="loading loading-spinner  loading-sm"></span>
+                  <span>Signing in ...</span>
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <FcGoogle />
+                  Google{" "}
+                </>
+              )}
             </button>
             <div className="hidden text-center mt-2 md:block text-sm text-gray-400">
               Don't have an account?{" "}

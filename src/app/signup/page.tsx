@@ -11,6 +11,8 @@ import { useEffect, useMemo, useState } from "react";
 import useAuth from "@/hook/useAuth";
 import { getCustomErrorMessage } from "@/utils/getErrormessage";
 import {
+  getRedirectResult,
+  GoogleAuthProvider,
   sendEmailVerification,
   updateProfile,
   validatePassword,
@@ -31,8 +33,13 @@ export default function Signup() {
     formState: { errors },
   } = useForm<SignupProps>();
 
-  const { handleGoogleSignIn, setUser, handleSignUp, handleUpdateProfile } =
-    useAuth();
+  const {
+    handleGoogleSignIn,
+    setUser,
+    handleSignUp,
+    handleUpdateProfile,
+    AuthLoading,
+  } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -73,13 +80,14 @@ export default function Signup() {
   };
 
   // hanldleGoogleSignin
-  const handleGoogleSignup = () => {
-    handleGoogleSignIn()
-      .then((res) => {
-        router.push("/");
-        setUser(res.user);
-      })
-      .catch((err) => setError(getCustomErrorMessage(err)));
+  const handleGoogleSignup = async () => {
+    try {
+      // Just call it. Don't wait for a user result.
+      // The browser will leave this page immediately.
+      await handleGoogleSignIn();
+    } catch (err: any) {
+      setError(getCustomErrorMessage(err));
+    }
   };
 
   // show Error message
@@ -169,7 +177,7 @@ export default function Signup() {
               <Button
                 label={loading ? "Creating Account  ..." : "Create Account"}
                 classname="w-full rounded-xl py-2! shadow-none hover:scale-100! font-normal"
-                icon={!loading && ArrowRight}
+                icon={loading ? undefined : ArrowRight}
                 spinner={loading && true}
               />
 
@@ -181,11 +189,22 @@ export default function Signup() {
               {/* Social Login Button (Google) */}
             </form>
             <button
+              disabled={AuthLoading}
               onClick={handleGoogleSignup}
-              className="w-full cursor-pointer bg-[#1A1A20] hover:bg-[#25252e] border border-gray-800 text-gray-300 font-medium py-3 rounded-xl transition-all flex items-center justify-center gap-3"
+              className="w-full py-3 rounded-xl border border-gray-800 font-medium transition-all flex items-center justify-center gap-3 bg-[#1A1A20] text-gray-300 hover:bg-[#25252e] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#1A1A20]"
             >
-              <FcGoogle />
-              Google
+              {AuthLoading ? (
+                <>
+                  <span className="loading loading-spinner  loading-sm"></span>
+                  <span>Signing in ...</span>
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <FcGoogle />
+                  Google{" "}
+                </>
+              )}
             </button>
 
             <div className="text-center mt-6 text-sm text-gray-400">

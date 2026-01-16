@@ -1,9 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
-  reactStrictMode : false
+  reactStrictMode: false, // Keep this false for now to simplify debugging
+  async rewrites() {
+    return [
+      {
+        source: '/__/auth/:path*',
+        destination: `https://proittoolsbd.firebaseapp.com/__/auth/:path*`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -12,7 +12,7 @@ export default function page() {
   const [countdown, setCountdown] = useState(0);
   const [isResending, setIsResending] = useState(false);
 
-  const { user , handleLogout} = useAuth();
+  const { user, handleLogout } = useAuth();
   const router = useRouter();
   const handleVerifyEmail = async () => {
     setIsVerifying(true);
@@ -154,49 +154,47 @@ export default function page() {
                     : "I have verified my email"
                 }
                 classname="w-full rounded-xl py-2! shadow-none hover:scale-100! font-normal"
-                icon={!isVerifying && ArrowRight}
-                spinner={isVerifying && true}
+                icon={isVerifying ? undefined : ArrowRight}
+                spinner={isVerifying}
               />
 
               {/* Secondary "Resend" Link */}
-               {/* Secondary "Resend" Link */}
+              {/* Secondary "Resend" Link */}
               <div className="text-center">
-                <button 
+                <button
                   onClick={handleResendEmail}
                   disabled={isResending || countdown > 0}
                   className={`
                     text-sm transition-all duration-300
-                    ${(isResending || countdown > 0)
-                      ? "text-gray-600 cursor-not-allowed decoration-transparent" // Disabled Look
-                      : "text-gray-400 hover:text-white underline decoration-gray-700 underline-offset-4 hover:decoration-white cursor-pointer" // Active Look
+                    ${
+                      isResending || countdown > 0
+                        ? "text-gray-600 cursor-not-allowed decoration-transparent" // Disabled Look
+                        : "text-gray-400 hover:text-white underline decoration-gray-700 underline-offset-4 hover:decoration-white cursor-pointer" // Active Look
                     }
                   `}
                 >
-                  {isResending ? (
-                    "Sending email..."
-                  ) : countdown > 0 ? (
-                    `Resend available in ${countdown}s`
-                  ) : (
-                    "Didn't receive the email? Resend"
-                  )}
+                  {isResending
+                    ? "Sending email..."
+                    : countdown > 0
+                    ? `Resend available in ${countdown}s`
+                    : "Didn't receive the email? Resend"}
                 </button>
               </div>
-          </div>
+            </div>
 
-          {/* FOOTER TEXT */}
-          <div className="mt-8 text-center">
-            <p className="text-xs text-gray-500">
-              Need help?{" "}
-              <a
-                href="#"
-                className="text-purple-400 hover:text-purple-300 transition-colors"
-              >
-                Contact Support
-              </a>
-            </p>
+            {/* FOOTER TEXT */}
+            <div className="mt-8 text-center">
+              <p className="text-xs text-gray-500">
+                Need help?{" "}
+                <a
+                  href="#"
+                  className="text-purple-400 hover:text-purple-300 transition-colors"
+                >
+                  Contact Support
+                </a>
+              </p>
+            </div>
           </div>
-        </div>
-
         </div>
       </main>
     </div>
