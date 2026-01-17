@@ -63,7 +63,7 @@ export default function Signup() {
 
             if (auth.currentUser) {
               sendEmailVerification(auth.currentUser)
-                .then(() => router.push("/verify-email"))
+                .then(() => router.push("/action?mode=verifyEmail"))
                 .catch((emailError) => {
                   setError(
                     "Account created, but could not send email. " +
@@ -161,7 +161,7 @@ export default function Signup() {
                 <Input
                   label="Password"
                   type="password"
-                  id="email"
+                  id="password"
                   Icon={Lock}
                   {...register("password", {
                     required: "Password is requred",

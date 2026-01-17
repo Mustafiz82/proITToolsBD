@@ -1,38 +1,18 @@
-"use client";
-import React, { useContext, useEffect, useState } from "react";
-import { Mail, RefreshCw, ArrowRight, ShieldCheck, LogOut } from "lucide-react";
 import useAuth from "@/hook/useAuth";
-import Button from "@/ui/Button";
-import { useRouter } from "next/navigation";
 import { sendEmailVerification } from "firebase/auth";
+import { LogOut, Mail, ShieldCheck } from "lucide-react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 
-export default function page() {
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [message, setMessage] = useState(""); // For showing success/error messages
+const VerifyEmail = () => {
+
+  const [message, setMessage] = useState(""); 
   const [countdown, setCountdown] = useState(60);
   const [isResending, setIsResending] = useState(false);
 
   const { user, handleLogout } = useAuth();
-  const router = useRouter();
-  const handleVerifyEmail = async () => {
-    setIsVerifying(true);
-    setMessage("");
 
-    if (!user) {
-      return router.push("/login");
-    }
 
-    try {
-      await user.reload();
-
-      if (user.emailVerified) {
-        router.push("/");
-      } else {
-        setIsVerifying(false);
-        setMessage("❌ Email is not verified yet. Please check your inbox.");
-      }
-    } catch (error) {}
-  };
 
   const handleResendEmail = async () => {
     if (!user || countdown > 0) return;
@@ -71,6 +51,8 @@ export default function page() {
 
     return () => clearTimeout(timerId);
   }, [countdown]);
+
+
 
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans flex flex-col relative overflow-hidden selection:bg-purple-500/30">
@@ -145,21 +127,6 @@ export default function page() {
 
             {/* ACTION BUTTONS */}
             <div className="space-y-4">
-              {/* Primary "I Verified" Button */}
-              <Button
-                onClick={handleVerifyEmail}
-                label={
-                  isVerifying
-                    ? "Verifying Email  ..."
-                    : "I have verified my email"
-                }
-                classname="w-full rounded-xl py-2! shadow-none hover:scale-100! font-normal"
-                icon={isVerifying ? undefined : ArrowRight}
-                spinner={isVerifying}
-              />
-
-              {/* Secondary "Resend" Link */}
-              {/* Secondary "Resend" Link */}
               <div className="text-center">
                 <button
                   onClick={handleResendEmail}
@@ -199,4 +166,6 @@ export default function page() {
       </main>
     </div>
   );
-}
+};
+
+export default VerifyEmail;

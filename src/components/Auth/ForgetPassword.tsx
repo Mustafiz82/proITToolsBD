@@ -11,8 +11,9 @@ import {
 import Button from "@/ui/Button";
 import Link from "next/link";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../../../../firebase.config";
-export default function ForgotPasswordPage() {
+import { auth } from "../../../firebase.config";
+
+export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false); // To toggle between Form and Success view
