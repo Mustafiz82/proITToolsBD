@@ -1,55 +1,24 @@
-"use client"
-import { useSearchParams } from "next/navigation";
-import React from "react";
-import VerifyEmail from "@/components/Auth/VerifyEmail";
-import ResetPassword from "@/components/Auth/ResetPassword";
-import EmailVerifying from "@/components/Auth/EmailVerifying";
-import ForgotPassword from "@/components/Auth/ForgetPassword";
-import ErrorPage from "@/components/Error/ErrorPage";
+"use client";
+import React, { Suspense } from "react";
+import SuspanceWrapper from "@/components/Auth/SuspanceWrapper";
 
 const page = () => {
+  
 
-  const searchParams = useSearchParams();
-
-  const oobCode = searchParams.get("oobCode")
-  const mode = searchParams.get("mode")
-
-  console.log({mode , oobCode})
-
-
-  if(mode == "resetPassword"){
-
-    if(oobCode){
-
-        return  <ResetPassword oobCode={oobCode}/>
-    }
-
-    else {
-        return  <ForgotPassword/>
-    }
-  }
-
-  else if(mode == "verifyEmail"){
-
-    if(oobCode){
-        return <EmailVerifying oobCode={oobCode}/>
-    }
-
-    else {
-        return <VerifyEmail  />
-    }
-  }
-
-  else {
-    return <ErrorPage/>
-  }
-
-
-
-
-
-
-  return <div></div>;
+  return (
+    <div>
+      <Suspense
+        fallback={
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <span className="loading loading-spinner text-purple-500 loading-lg"></span>
+            <p className="text-gray-400 text-sm">Verifying link...</p>
+          </div>
+        }
+      >
+       <SuspanceWrapper/>
+      </Suspense>
+    </div>
+  );
 };
 
 export default page;
