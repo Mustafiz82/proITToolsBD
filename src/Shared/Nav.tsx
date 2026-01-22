@@ -5,10 +5,14 @@ import { Menu, Rocket } from "lucide-react";
 import { useParams, usePathname } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 import useAuth from "@/hook/useAuth";
+import { FaCartPlus } from "react-icons/fa";
+import LoginGetStarted from "./LoginGetStarted";
+import CartDashboard from "./CartDashboard";
 
 const Navbar = () => {
   const route = usePathname();
-  const { user , handleLogout} = useAuth();
+  const { user, handleLogout, AuthLoading } = useAuth();
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   console.log(user);
 
@@ -18,8 +22,7 @@ const Navbar = () => {
     return;
   }
 
-
-  
+  console.log(AuthLoading);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-lg">
@@ -50,30 +53,16 @@ const Navbar = () => {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
-          {user ? (
-            <>
-
-              <button 
-              onClick={handleLogout}
-              className="hidden md:block cursor-pointer text-sm font-medium text-gray-300 hover:text-white transition-colors"> Logout</button>
-
-
-              <button className="bg-primary  hover:bg-violet-600 text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-all shadow-[0_0_15px_rgba(139,92,246,0.5)] cursor-pointer active:scale-95">
-                Dashboard
-              </button>
-            </>
+          {AuthLoading ? (
+            isLoggedIn == "true" ? (
+              <CartDashboard handleLogout={handleLogout} />
+            ) : (
+              <LoginGetStarted />
+            )
+          ) : user ? (
+            <CartDashboard handleLogout={handleLogout} />
           ) : (
-            <>
-              <Link
-                href="/login"
-                className="hidden md:block text-sm font-medium text-gray-300 hover:text-white transition-colors"
-              >
-                Login
-              </Link>
-              <Link href={"/signup"} className="bg-primary hover:bg-violet-600 text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-all shadow-[0_0_15px_rgba(139,92,246,0.5)] cursor-pointer active:scale-95">
-                Get Started
-              </Link>
-            </>
+            <LoginGetStarted />
           )}
 
           {/* Mobile Menu Icon */}

@@ -102,6 +102,10 @@ const AuthProvider = ({ children }: containerProps) => {
     const unSubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
+        localStorage.setItem("isLoggedIn" , "true")
+      }
+      else{
+        localStorage.setItem("isLoggedIn" , "false")
       }
       SetLoading(false);
     });
