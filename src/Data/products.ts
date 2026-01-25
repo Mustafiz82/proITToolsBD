@@ -93,7 +93,7 @@ export const products: Product[] = [
     id: '2',
     name: 'Canva Pro',
     slug: 'canva-pro',
-    logo: '/Home/canva-logo.png',
+    logo: '/Home/canva.jpg',
     price: 3.50,
     originalPrice: 12.00,
     badge: 'Popular',

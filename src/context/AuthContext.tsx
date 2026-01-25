@@ -69,7 +69,7 @@ const AuthProvider = ({ children }: containerProps) => {
     } else {
       return Promise.reject(new Error("User Not Found"));
     }
-  };
+  };  
 
   const handleLogout = () => {
     SetLoading(true);

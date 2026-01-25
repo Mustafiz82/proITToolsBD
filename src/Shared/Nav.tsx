@@ -1,25 +1,23 @@
 "use client";
-import React, { useContext } from "react";
 import Link from "next/link";
 import { Menu, Rocket } from "lucide-react";
-import { useParams, usePathname } from "next/navigation";
-import { AuthContext } from "@/context/AuthContext";
+import { usePathname } from "next/navigation";
 import useAuth from "@/hook/useAuth";
-import { FaCartPlus } from "react-icons/fa";
 import LoginGetStarted from "./LoginGetStarted";
 import CartDashboard from "./CartDashboard";
 
 const Navbar = () => {
   const route = usePathname();
-  const { user, handleLogout, AuthLoading } = useAuth();
+
+  const { user,  AuthLoading } = useAuth();
   const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   console.log(user);
 
   const unShownRoute = ["signup", "login"];
 
-  if (unShownRoute.includes(route.slice(1))) {
-    return;
+  if (unShownRoute.includes(route.slice(1)) || route.startsWith("/dashboard")) {
+    return null;
   }
 
   console.log(AuthLoading);
@@ -55,12 +53,12 @@ const Navbar = () => {
         <div className="flex items-center gap-4">
           {AuthLoading ? (
             isLoggedIn == "true" ? (
-              <CartDashboard handleLogout={handleLogout} />
+              <CartDashboard  />
             ) : (
               <LoginGetStarted />
             )
           ) : user ? (
-            <CartDashboard handleLogout={handleLogout} />
+            <CartDashboard />
           ) : (
             <LoginGetStarted />
           )}
