@@ -15,7 +15,8 @@ import {
 
 import React, { createContext, useEffect, useState } from "react";
 import { auth } from "../../firebase.config";
-import { useRouter } from "next/navigation";  
+import { useRouter } from "next/navigation";
+import { createUser } from "@/lib/createUser";
 
 interface containerProps {
   children: React.ReactNode;
@@ -30,7 +31,7 @@ interface AuthProps {
   handleSignIn: (email: string, password: string) => Promise<UserCredential>;
   handleUpdateProfile: (
     name: string,
-    photoURL?: string | undefined
+    photoURL?: string | undefined,
   ) => Promise<void>;
   handleLogout: () => void;
 }
@@ -69,7 +70,7 @@ const AuthProvider = ({ children }: containerProps) => {
     } else {
       return Promise.reject(new Error("User Not Found"));
     }
-  };  
+  };
 
   const handleLogout = () => {
     SetLoading(true);
@@ -81,31 +82,51 @@ const AuthProvider = ({ children }: containerProps) => {
   };
 
   useEffect(() => {
-    console.log("Checking for redirect result...");
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result) {
-          console.log("SUCCESS! User created:", result.user);
-          setUser(result.user);
-          router.push("/");
-          SetLoading(false);
-        } else {
+    const handleRedirect = async () => {
+      try {
+        console.log("Checking for redirect result...");
+        const result = await getRedirectResult(auth);
+
+        if (!result) {
           console.log("No redirect result found (or token already used).");
+          return;
         }
-      })
-      .catch((error) => {
-        console.error("FAILED to create user:", error.code, error.message);
-      });
+
+        console.log("SUCCESS! User created:", result.user);
+        setUser(result.user);
+
+        const { displayName, email } = result.user;
+
+        if (!displayName || !email) {
+          throw new Error("Missing displayName or email");
+        }
+
+        // ✅ WAIT for backend user creation
+        await createUser(displayName, email);
+
+        // ✅ navigate ONLY after backend success
+        router.push("/");
+      } catch (error: any) {
+        console.error(
+          "FAILED to create user:",
+          error?.code,
+          error?.message || error,
+        );
+      } finally {
+        SetLoading(false);
+      }
+    };
+
+    handleRedirect();
   }, []);
 
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
-        localStorage.setItem("isLoggedIn" , "true")
-      }
-      else{
-        localStorage.setItem("isLoggedIn" , "false")
+        localStorage.setItem("isLoggedIn", "true");
+      } else {
+        localStorage.setItem("isLoggedIn", "false");
       }
       SetLoading(false);
     });

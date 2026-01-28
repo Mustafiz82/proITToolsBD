@@ -19,6 +19,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../../../../firebase.config";
 import { useRouter } from "next/navigation";
+import { createUser } from "@/lib/createUser";
 
 export interface SignupProps {
   fullName: string;
@@ -45,49 +46,44 @@ export default function Signup() {
   const router = useRouter();
 
   // handle form submit signup
-  const onSubmit: SubmitHandler<SignupProps> = (data) => {
+  const onSubmit: SubmitHandler<SignupProps> = async (data) => {
     const { email, password } = data;
     setLoading(true);
 
-    validatePassword(auth, password).then((res) => {
+    try {
+      const res = await validatePassword(auth, password);
       if (!res.isValid) {
         setLoading(false);
         return setError("Use uppercase, lowercase, number, and symbol.");
       }
 
-      handleSignUp(email, password)
-        .then((res) => {
-          handleUpdateProfile(data?.fullName).then(() => {
-            setUser(res.user);
-            setError("");
+      const signupRes = await handleSignUp(email, password);
+      await handleUpdateProfile(data?.fullName);
+      await createUser(data.fullName , data.email)
 
-            if (auth.currentUser) {
-              sendEmailVerification(auth.currentUser)
-                .then(() => router.push("/action?mode=verifyEmail"))
-                .catch((emailError) => {
-                  setError(
-                    "Account created, but could not send email. " +
-                      emailError.message
-                  );
-                  setLoading(false);
-                });
-            }
+      if (auth.currentUser) {
+        sendEmailVerification(auth.currentUser)
+          .then(() => router.push("/action?mode=verifyEmail"))
+          .catch((emailError) => {
+            setError(
+              "Account created, but could not send email. " +
+                emailError.message,
+            );
+            setLoading(false);
           });
-        })
-        .catch((err) => {
-          setError(getCustomErrorMessage(err))
-          setLoading(false)
-        })
-        
-    }); 
+      }
+    } catch (error) {
+      console.log(error)
+    }
+
+    
   };
 
   // hanldleGoogleSignin
   const handleGoogleSignup = async () => {
     try {
-      // Just call it. Don't wait for a user result.
-      // The browser will leave this page immediately.
-      await handleGoogleSignIn();
+      const response = await handleGoogleSignIn();
+      console.log(response);
     } catch (err: any) {
       setError(getCustomErrorMessage(err));
     }
