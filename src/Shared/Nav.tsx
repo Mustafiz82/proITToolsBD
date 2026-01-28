@@ -10,13 +10,13 @@ const Navbar = () => {
   const route = usePathname();
 
   const { user,  AuthLoading } = useAuth();
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  const isLoggedIn = typeof window !== "undefined" && localStorage.getItem("isLoggedIn");
 
   console.log(user);
 
   const unShownRoute = ["signup", "login"];
 
-  if (unShownRoute.includes(route.slice(1)) || route.startsWith("/dashboard")) {
+  if (unShownRoute.includes(route.slice(1)) || route.startsWith("/dashboard") || route.startsWith("/admin")) {
     return null;
   }
 

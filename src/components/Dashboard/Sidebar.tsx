@@ -9,42 +9,28 @@ import {
   User,
   HomeIcon,
   ToolCase,
+  LucideProps,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { BsWhatsapp } from "react-icons/bs";
 
-const Sidebar = () => {
+
+
+interface menuItems {
+  name : string 
+  icon : React.ReactNode
+  link : string
+
+}
+
+const Sidebar = ({menuItems}:{menuItems : menuItems[]}) => {
   const pathname = usePathname();
   const { handleLogout} = useAuth()
 
   console.log(pathname);
-  // Define menu items for cleaner code
-  const menuItems = [
-    {
-      name: "Dashboard",
-      icon: <LayoutDashboard size={20} />,
-      link: "/dashboard",
-    },
-    {
-      name: "subscriptions",
-      icon: <ToolCase size={20} />,
-      link: "/dashboard/subscriptions",
-    },
-    { name: "Profile", icon: <User size={20} />, link: "/dashboard/profile" },
-    {
-      name: "Support",
-      icon: <BsWhatsapp size={18} />,
-      link: "https://wa.me/+8801742950624",
-    },
-    {
-        name: "Tutorials",
-        icon: <BookOpen size={20} />,
-        link: "/dashboard/tutorials",
-    },
-    { name: "Home", icon: <HomeIcon size={20} />, link: "/" },
-  ];
+
 
   return (
     <aside className="min-h-[calc(100vh-160px)]   left-5 top-5 shadow-black bottom-5 w-64 bg-white/5 backdrop-blur-md border border-white/5 rounded-3xl flex flex-col p-5 shadow-2xl z-50">

@@ -1,39 +1,60 @@
 import Sidebar from "@/components/Dashboard/Sidebar";
-import { BookOpen, HomeIcon, LayoutDashboard, ToolCase, User } from "lucide-react";
-import { BsWhatsapp } from "react-icons/bs";
+import {
+  LayoutDashboard,
+  HomeIcon,
+  TicketPercent,
+  ClipboardList,
+  Clock,
+  KeyRound,
+  ShieldCheck,
+  User2,
+  UserCheck,
+  Users,
+} from "lucide-react";
 
-export default function Layout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-
-
+export default function Layout({ children }: { children: React.ReactNode }) {
   const menuItems = [
     {
       name: "Dashboard",
       icon: <LayoutDashboard size={20} />,
-      link: "/dashboard",
+      link: "/admin",
     },
     {
-      name: "subscriptions",
-      icon: <ToolCase size={20} />,
-      link: "/dashboard/subscriptions",
-    },
-    { name: "Profile", icon: <User size={20} />, link: "/dashboard/profile" },
-    {
-      name: "Support",
-      icon: <BsWhatsapp size={18} />,
-      link: "https://wa.me/+8801742950624",
+      name: "Manage Orders",
+      icon: <ClipboardList size={20} />,
+      link: "/admin/orders",
     },
     {
-        name: "Tutorials",
-        icon: <BookOpen size={20} />,
-        link: "/dashboard/tutorials",
+      name: "Cookie Management",
+      icon: <KeyRound size={20} />,
+      link: "/admin/cookies",
     },
-    { name: "Home", icon: <HomeIcon size={20} />, link: "/" },
+    {
+      name: "Customers",
+      icon: <UserCheck size={20} />,
+      link: "/admin/customers",
+    },
+    {
+      name: "Users",
+      icon: <Users size={20} />,
+      link: "/admin/users",
+    },
+    {
+      name: "WaitList",
+      icon: <Clock size={20} />,
+      link: "/admin/waitlist",
+    },
+    {
+      name: "Coupons",
+      icon: <TicketPercent size={20} />,
+      link: "/admin/coupons",
+    },
+    {
+      name: "Home",
+      icon: <HomeIcon size={20} />,
+      link: "/",
+    },
   ];
-
 
   return (
     <html lang="en">
