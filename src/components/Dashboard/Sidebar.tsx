@@ -14,8 +14,6 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { BsWhatsapp } from "react-icons/bs";
-
 
 
 interface menuItems {
